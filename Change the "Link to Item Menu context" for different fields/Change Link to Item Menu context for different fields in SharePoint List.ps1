@@ -4,13 +4,12 @@ Add-PSSnapin Microsoft.SharePoint.PowerShell -ErrorAction Stop
 #Allow or disallow List Item Menu Context in SharePoint List.
 function Manage-ListItemMenu()
 	{
-	param ([string]$WebAppURL,[string]$List,[string]$Field,[bool]$Allow)
+	param ([string]$WebURL,[string]$List,[string]$Field,[bool]$Allow)
 		Try
 		{
-             $Web = Get-SPWeb $WebAppURL
+             $Web = Get-SPWeb $WebURL
              $Lst = $web.Lists[$List]
              $Fld = $Lst.Fields[$Field]
-             $msg = "The List Item Menu Context has been allowed for"
              if($Allow -eq $True)
              {
                Write-Host "Allow List Item Menu Context in SharePoint List" -ForegroundColor Green
@@ -27,6 +26,7 @@ function Manage-ListItemMenu()
                 #Reflect the Update
                 $Fld.Update()
                 $Lst.Update()
+		$Web.Dispose()
                 Write-Host $msg $Field "successfully" -ForegroundColor Cyan
 			
 		}
@@ -36,5 +36,5 @@ function Manage-ListItemMenu()
 		}
 	}
 
-Manage-ListItemMenu -WebAppURL "http://epm:19812/PWA/" -List "LinkToItemMenu" -Field "Allow" -Allow $False
+Manage-ListItemMenu -WebURL "http://epm:19812/PWA/" -List "LinkToItemMenu" -Field "Allow" -Allow $False
 
